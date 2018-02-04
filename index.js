@@ -113,6 +113,23 @@ const server = http.createServer(async (req, res) => {
     const specifier = searchParams.get('specifier');
     const resolved_specifier = await loader.resolve(specifier, `http://${req.headers.host}${referrer}`);
     const resolved_specifier_json = JSON.stringify(`${resolved_specifier}`);
+    if (resolved_specifier.searchParams.has('namespace')) {
+      // indirection through a module creates a new ===
+      // Module Namespace Object, we have a different kind
+      // of indirection explicitly for getting namespaces
+      const body = `
+        import * as _ from ${resolved_specifier_json};
+        export {_ as default};
+        export function then(f) {f(import(${resolved_specifier_json}));};
+      `;
+      res.writeHead(200, {
+        __proto__: null,
+        'content-type': 'text/javascript',
+        'content-length': body.length,
+      });
+      res.end(body);
+      return;
+    }
     let body = `export * from ${resolved_specifier_json};\n`;
     // we have to see if it has a default export...
     let statusCode,

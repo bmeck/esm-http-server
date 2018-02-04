@@ -1,7 +1,14 @@
 {
   "name": "esm-http-server",
   "version": "1.0.0",
-  "description": "",
+  "description": "http server with esm loader hooks",
+  "files": [
+    "provider/file.js",
+    "provider/http_proxy.js",
+    "index.js",
+    "instrument.js",
+    "loaders/whatwg.js"
+  ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

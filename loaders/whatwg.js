@@ -1,3 +1,4 @@
+'use strict';
 const URL = require('url').URL;
 module.exports = class {
   async resolve(specifier, referrer) {
@@ -17,4 +18,3 @@ module.exports = class {
     }
   }
 };
-

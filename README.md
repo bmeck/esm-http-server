@@ -21,10 +21,10 @@ All files will be served under the `/serve/` prefix, so a `index.html` file at t
 By default specifiers follow the [WHATWG module resolution algorithm](https://html.spec.whatwg.org/multipage/webappapis.html#resolve-a-module-specifier).
 
 ```sh
-PORT=8080 esm-http-server loader.js
+PORT=8080 esm-http-server --loader loader.js
 ```
 
-You can inspect the shape of the [default loader](./loaders/whatwg.js) to see what a custom one needs to provide.
+You can inspect the shape of the [default loader](./loaders/log.js) to see what a custom one needs to provide. These loaders are designed to be composable and multiple `--loader` flags are allowed and are constructed from left to right with the left as the final loader and the right as the first loader that intercepts requests.
 
 ## Limitations
 

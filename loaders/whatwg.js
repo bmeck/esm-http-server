@@ -2,7 +2,6 @@
 const URL = require('url').URL;
 module.exports = class {
   async resolve(specifier, referrer) {
-    console.error(`WHAWTWG Loader resolving ${specifier} against ${referrer}`);
     try {
       return new URL(specifier);
     } catch (e) {

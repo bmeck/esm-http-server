@@ -1,13 +1,15 @@
 {
   "name": "esm-http-server",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "http server with esm loader hooks",
   "files": [
     "provider/file.js",
     "provider/http_proxy.js",
     "index.js",
     "instrument.js",
-    "loaders/whatwg.js"
+    "loaders/whatwg.js",
+    "loaders/log.js",
+    "loaders/node_modules.js"
   ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -35,6 +37,7 @@
     "babel-types": "6.26.0",
     "concat-stream": "1.6.0",
     "mime": "2.2.0",
+    "minimist": "1.2.0",
     "whatwg-mimetype": "2.0.1"
   }
 }

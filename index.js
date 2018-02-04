@@ -4,13 +4,22 @@ const http = require('http');
 const {URL} = require('url');
 const instrument = require('./instrument.js');
 const httpProvider = require('./provider/http_proxy');
-let loader = new (require('./loaders/whatwg.js'))();
-if (process.argv[2]) {
+let loader;
+const argv = require('minimist')(process.argv.slice(2), {
+  __proto__: null,
+  string: ['loader'],
+  default: {
+    __proto__: null,
+    loader: ['./loaders/whatwg.js'],
+  },
+});
+for (const loader_specifier of argv.loader) {
   loader = new (require(
-    require.resolve(process.argv[2], {
+    require.resolve(loader_specifier, {
+      __proto__: null,
       paths: [process.cwd()]
     })
-  ))();
+  ))(loader);
 }
 const MIMEType = require('whatwg-mimetype');
 const isJSMIME = (content_type = 'application/octet-stream') => {
@@ -103,13 +112,14 @@ const server = http.createServer(async (req, res) => {
       res.end(code);
       return;
     } catch (e) {
+      console.error(`Error: ${e.message}`);
       res.writeHead(400);
       res.end();
       return;
     }
   } else if (req.url.startsWith('/redirect?')) {
     const searchParams = new URL(`http://${req.headers.host}/${req.url}`).searchParams;
-    let referrer = searchParams.get('referrer');
+    const referrer = searchParams.get('referrer');
     const specifier = searchParams.get('specifier');
     const resolved_specifier = await loader.resolve(specifier, `http://${req.headers.host}${referrer}`);
     const resolved_specifier_json = JSON.stringify(`${resolved_specifier}`);
@@ -164,9 +174,12 @@ const server = http.createServer(async (req, res) => {
       'content-length': body.length,
     });
     res.end(body);
+    return;
   } else {
+    console.error(`Error: ${e.message}`);
     res.writeHead(400);
     res.end('All content is served under "/serve/"');
+    return;
   }
 });
 server.listen(PORT, '127.0.0.1', () => {
